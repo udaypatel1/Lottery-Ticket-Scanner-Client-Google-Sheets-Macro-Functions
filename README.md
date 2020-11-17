@@ -1,0 +1,1 @@
+# Lottery-Ticket-Scanner-Client-Google-Sheets-Macro-Functions
