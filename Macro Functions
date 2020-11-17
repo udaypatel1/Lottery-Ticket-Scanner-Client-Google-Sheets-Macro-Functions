@@ -1,0 +1,66 @@
+function vlookup(sheet,column,index,value) {
+  
+  var lastRow = sheet.getLastRow();
+  var data = sheet.getRange(1,column,lastRow,column+index).getValues();
+  
+  for(i=0; i<data.length; ++i){
+   if (data[i][0] == value){
+      return data[i][index];
+  }
+    
+}
+  return "False";
+}
+
+function licenseCheck(userEmail) {
+
+  var ss = SpreadsheetApp.openById("1VVwFF-jdpQYZBcSbtBd5TeKPtGHQZykLBCNCn1kuKT8")
+  var activeSheet = ss.getActiveSheet();
+  
+  var myEmail = userEmail;
+  var answer = vlookup(activeSheet,1,1,myEmail);
+  return answer;
+  
+}
+
+
+
+function newSheet() {
+
+  var ss = SpreadsheetApp.getActive();
+  var eet = ss.getSpreadsheetTimeZone();
+  var sheets = ss.getSheets();
+  var date = Utilities.formatDate(new Date(), eet, 'yyyy-MM-dd');
+  
+  var userEmail = Session.getActiveUser().getEmail();
+
+  if(licenseCheck(userEmail) == "False"){
+    var error = SpreadsheetApp.getUi().alert("License Verification Error: Please Contact Administrator.");
+    return
+  }
+  else{
+  
+    var ui = SpreadsheetApp.getUi();
+    var cursheetName = ss.getActiveSheet().getName();
+    if(date == cursheetName){
+      var alert = ui.alert("Today's sheet already exists!");
+      return
+    }
+  
+    var template = ss.getSheetByName("Inventory_Template");
+    var setActive = ss.setActiveSheet(template);
+    setActive;
+  
+    var duplicate = ss.duplicateActiveSheet();
+    duplicate;
+  
+    var rename = SpreadsheetApp.getActiveSpreadsheet().renameActiveSheet(date);
+    rename;
+  
+  
+    var timeCell = ss.getRange('X1:X100').setValue(cursheetName);
+    timeCell;
+  
+  }
+ 
+}
